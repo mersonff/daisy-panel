@@ -32,8 +32,8 @@
           <li class="menu-title">
             <span><%= current_user.email %></span>
           </li>
-          <li><%= link_to "Editar Perfil", edit_user_registration_path %></li>
-          <li><%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-error" %></li>
+          <li><%= link_to "Perfil", edit_user_registration_path %></li>
+          <li><%= button_to "Sair", destroy_user_session_path, method: :delete, class: "text-error w-full text-left btn btn-ghost" %></li>
         </ul>
       </div>
     </div>

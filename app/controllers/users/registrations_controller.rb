@@ -1,13 +1,13 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:new, :create]
 
   # Disable new user registration
   def new
-    redirect_to root_path, alert: "Registro não disponível. Entre em contato com o administrador."
+    redirect_to new_user_session_path, alert: "Registro público não permitido. Entre em contato com o administrador."
   end
 
   def create
-    redirect_to root_path, alert: "Registro não disponível. Entre em contato com o administrador."
+    redirect_to new_user_session_path, alert: "Registro público não permitido. Entre em contato com o administrador."
   end
 
   # Allow existing users to edit their profile

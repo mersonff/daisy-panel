@@ -4,8 +4,12 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  # Public pages (dashboard)
+  # Public pages
   root to: "pages#home"
+  get 'home', to: 'pages#home'
+
+  # Dashboard (authenticated users)
+  get 'dashboard', to: 'admin/dashboard#index'
 
   # Admin panel
   namespace :admin do

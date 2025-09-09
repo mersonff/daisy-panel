@@ -4,8 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Only allow registration through console/seeds for admin users
   def self.create_admin(email, password)
-    create!(email: email, password: password, password_confirmation: password)
+    create!(email: email, password: password, password_confirmation: password, admin: true)
   end
 end

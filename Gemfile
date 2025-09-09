@@ -68,10 +68,11 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "shoulda-matchers"
+  gem "rails-controller-testing"
 
-  # E2E testing
-  gem "cucumber-rails", require: false
-  gem "database_cleaner-active_record"
+  # Code coverage
+  gem "simplecov", require: false
 end
 
 gem "vite_rails", "~> 3.0"
