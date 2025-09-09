@@ -1,1 +1,79 @@
-<button class="btn btn-primary">Hello daisyUI!</button>
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-4xl">
+      <h1 class="text-5xl font-bold">Daisy Panel</h1>
+      <p class="py-6">Dashboard em tempo real - Sistema de Gerenciamento de Clientes</p>
+      
+      <!-- Stats Cards -->
+      <div class="stats shadow">
+        <div class="stat">
+          <div class="stat-figure text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          </div>
+          <div class="stat-title">Total de Clientes</div>
+          <div class="stat-value text-primary" id="total-clients">0</div>
+          <div class="stat-desc">Clientes cadastrados</div>
+        </div>
+        
+        <div class="stat">
+          <div class="stat-figure text-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <div class="stat-title">Telefones Duplicados</div>
+          <div class="stat-value text-secondary" id="duplicate-phones">0</div>
+          <div class="stat-desc">Clientes com telefones iguais</div>
+        </div>
+      </div>
+      
+      <!-- Clients per State -->
+      <div class="mt-8">
+        <h2 class="text-3xl font-bold mb-4">Clientes por Estado</h2>
+        <div class="overflow-x-auto">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Estado</th>
+                <th>Quantidade</th>
+              </tr>
+            </thead>
+            <tbody id="clients-per-state">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="mt-8">
+        <%= link_to "Acessar Painel Administrativo", admin_root_path, class: "btn btn-primary btn-lg" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // TODO: Implement real-time updates with WebSocket/ActionCable
+  function updateStats() {
+    // Placeholder for real-time stats
+    fetch('/api/stats')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('total-clients').textContent = data.total_clients || 0;
+        document.getElementById('duplicate-phones').textContent = data.duplicate_phones || 0;
+        
+        const stateTableBody = document.getElementById('clients-per-state');
+        stateTableBody.innerHTML = '';
+        
+        if (data.clients_per_state) {
+          data.clients_per_state.forEach(state => {
+            const row = `<tr><td>${state.name}</td><td>${state.count}</td></tr>`;
+            stateTableBody.innerHTML += row;
+          });
+        }
+      })
+      .catch(error => console.log('Stats not available yet'));
+  }
+  
+  // Update stats every 5 seconds
+  updateStats();
+  setInterval(updateStats, 5000);
+</script>

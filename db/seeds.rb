@@ -7,3 +7,13 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Create admin user
+admin_user = User.find_by(email: 'admin@daisypanel.com')
+
+if admin_user.nil?
+  admin_user = User.create_admin('admin@daisypanel.com', 'password123')
+  puts "Admin user created: #{admin_user.email}"
+else
+  puts "Admin user already exists: #{admin_user.email}"
+end
