@@ -1,13 +1,13 @@
 FactoryBot.define do
   factory :import_report do
-    user { nil }
-    filename { "MyString" }
-    status { "MyString" }
-    success_count { 1 }
-    error_count { 1 }
-    total_lines { 1 }
-    started_at { "2025-09-09 22:29:26" }
-    completed_at { "2025-09-09 22:29:26" }
-    error_details { "MyText" }
+    user
+    filename { "test_import.csv" }
+    status { "pending" }
+    success_count { 0 }
+    error_count { 0 }
+    total_lines { 0 }
+    started_at { nil }
+    completed_at { nil }
+    error_details { [] }
   end
 end
