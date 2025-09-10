@@ -1,0 +1,183 @@
+<div class="container mx-auto p-4 md:p-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Profile Header -->
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-base-content/70 text-lg">Atualize suas informações pessoais e configurações de conta</p>
+      </div>
+
+      <div class="grid gap-6">
+        <!-- Main Profile Form -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-xl mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Informações da Conta
+            </h2>
+            
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, local: true, class: "space-y-6") do |f| %>
+              <%= render "devise/shared/error_messages", resource: resource %>
+
+              <div class="form-control">
+                <%= f.label :email, class: "label" do %>
+                  <span class="label-text font-semibold">Email</span>
+                <% end %>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                    </svg>
+                  </div>
+                  <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-bordered w-full pl-10", required: true %>
+                </div>
+              </div>
+
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <div class="alert alert-info">
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <span>Aguardando confirmação para: <strong><%= resource.unconfirmed_email %></strong></span>
+                  </div>
+                </div>
+              <% end %>
+
+              <div class="divider">
+                <span class="text-base-content/60">Alterar Senha</span>
+              </div>
+
+              <div class="form-control">
+                <%= f.label :password, class: "label" do %>
+                  <span class="label-text font-semibold">Nova Senha</span>
+                  <span class="label-text-alt text-base-content/60">Opcional</span>
+                <% end %>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <%= f.password_field :password, autocomplete: "new-password", class: "input input-bordered w-full pl-10", placeholder: "Deixe em branco para manter a atual" %>
+                </div>
+                <% if @minimum_password_length %>
+                  <label class="label">
+                    <span class="label-text-alt text-base-content/60">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Mínimo <%= @minimum_password_length %> caracteres
+                    </span>
+                  </label>
+                <% end %>
+              </div>
+
+              <div class="form-control">
+                <%= f.label :password_confirmation, class: "label" do %>
+                  <span class="label-text font-semibold">Confirmar Nova Senha</span>
+                <% end %>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input input-bordered w-full pl-10", placeholder: "Confirme a nova senha" %>
+                </div>
+              </div>
+
+              <div class="divider">
+                <span class="text-base-content/60">Confirmação Necessária</span>
+              </div>
+
+              <div class="form-control">
+                <%= f.label :current_password, class: "label" do %>
+                  <span class="label-text font-semibold">Senha Atual</span>
+                  <span class="label-text-alt text-error">Obrigatório</span>
+                <% end %>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                    </svg>
+                  </div>
+                  <%= f.password_field :current_password, autocomplete: "current-password", class: "input input-bordered w-full pl-10", required: true, placeholder: "Digite sua senha atual" %>
+                </div>
+                <label class="label">
+                  <span class="label-text-alt text-base-content/60">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0121 12a11.955 11.955 0 01-1.382 5.516m0 0A11.955 11.955 0 0112 21a11.955 11.955 0 01-7.618-2.484m15.236 0A11.957 11.957 0 0112 18a11.957 11.957 0 01-7.618 3.516m0 0v0" />
+                    </svg>
+                    Necessária para confirmar as alterações
+                  </span>
+                </label>
+              </div>
+
+              <div class="form-control mt-8">
+                <div class="flex gap-3">
+                  <%= link_to admin_root_path, class: "btn btn-outline btn-lg flex-1 gap-2" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Cancelar
+                  <% end %>
+                  
+                  <%= f.submit "Atualizar Perfil", class: "btn btn-primary btn-lg flex-1 gap-2" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    Atualizar Perfil
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card bg-base-100 shadow-xl border border-error/20">
+          <div class="card-body">
+            <h2 class="card-title text-error text-xl mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              Zona de Perigo
+            </h2>
+            
+            <div class="alert alert-warning">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <div>
+                  <h3 class="font-bold">Atenção!</h3>
+                  <div class="text-xs">A exclusão da conta é permanente e não pode ser desfeita.</div>
+                </div>
+              </div>
+            </div>
+            
+            <%= button_to registration_path(resource_name), 
+                data: { 
+                  confirm: "⚠️  ATENÇÃO: Tem certeza absoluta?\n\nEsta ação irá:\n• Excluir permanentemente sua conta\n• Remover todos os seus dados\n• Não poderá ser desfeita\n\nDigite 'EXCLUIR' para confirmar:", 
+                  turbo_confirm: "⚠️  ATENÇÃO: Esta ação não pode ser desfeita!"
+                }, 
+                method: :delete, 
+                class: "btn btn-error btn-outline w-full gap-2" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Excluir Conta Permanentemente
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

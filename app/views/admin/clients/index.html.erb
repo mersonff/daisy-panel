@@ -1,0 +1,201 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Flash Messages -->
+  <div id="flash_messages"></div>
+  
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Clientes</h1>
+      <p class="text-base-content/70">Gerencie seus clientes cadastrados</p>
+    </div>
+    <%= link_to new_admin_client_path, 
+        class: "btn btn-primary",
+        data: { turbo_frame: "_top" } do %>
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+      Novo Cliente
+    <% end %>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <%= form_with url: admin_clients_path, method: :get, local: true, class: "form-control" do |form| %>
+        <div class="flex flex-col lg:flex-row gap-4">
+          <!-- Search Section -->
+          <div class="flex-1">
+            <label class="label">
+              <span class="label-text font-semibold">Termo de Busca</span>
+            </label>
+            <%= form.text_field :search, 
+                placeholder: "Digite o termo para buscar...", 
+                value: params[:search],
+                class: "input input-bordered w-full" %>
+          </div>
+          
+          <!-- Filter by Type -->
+          <div class="lg:w-48">
+            <label class="label">
+              <span class="label-text font-semibold">Buscar por</span>
+            </label>
+            <%= form.select :search_type, 
+                options_for_select([
+                  ['Todos os campos', ''],
+                  ['Nome', 'name'],
+                  ['CPF', 'cpf'], 
+                  ['Telefone', 'phone']
+                ], params[:search_type]),
+                {}, 
+                { class: "select select-bordered w-full" } %>
+          </div>
+          
+          <!-- Sort Options -->
+          <div class="lg:w-48">
+            <label class="label">
+              <span class="label-text font-semibold">Ordenar por</span>
+            </label>
+            <%= form.select :sort,
+                options_for_select([
+                  ['Nome (A-Z)', 'name_asc'],
+                  ['Nome (Z-A)', 'name_desc'],
+                  ['Estado (A-Z)', 'state_asc'],
+                  ['Estado (Z-A)', 'state_desc'],
+                  ['Mais recentes', 'created_at_desc'],
+                  ['Mais antigos', 'created_at_asc']
+                ], params[:sort]),
+                {},
+                { class: "select select-bordered w-full" } %>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex gap-2 lg:self-end">
+            <%= form.submit "Buscar", class: "btn btn-primary" %>
+            <%= link_to "Limpar", admin_clients_path, class: "btn btn-ghost" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <% if @clients.any? %>
+        <!-- Stats -->
+        <div class="stats stats-horizontal shadow mb-6">
+          <div class="stat">
+            <div class="stat-title">Total de Clientes</div>
+            <div class="stat-value"><%= @pagy.count %></div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Telefone</th>
+                <th>Cidade/Estado</th>
+                <th>Cadastrado em</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="clients_table">
+              <% @clients.each do |client| %>
+                <%= turbo_frame_tag client, class: "contents" do %>
+                  <tr>
+                    <td>
+                      <div class="font-bold"><%= client.name %></div>
+                    </td>
+                    <td>
+                      <div class="font-mono text-sm">
+                        <%= client.cpf.gsub(/(\d{3})(\d{3})(\d{3})(\d{2})/, '\1.\2.\3-\4') %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="text-sm"><%= client.phone %></div>
+                    </td>
+                    <td>
+                      <div class="text-sm">
+                        <%= client.city %>/<%= client.state %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="text-sm">
+                        <%= l(client.created_at, format: :short) %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="flex gap-2">
+                        <%= link_to admin_client_path(client), class: "btn btn-ghost btn-sm" do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                          </svg>
+                        <% end %>
+                        
+                        <%= link_to edit_admin_client_path(client), 
+                            class: "btn btn-ghost btn-sm",
+                            data: { turbo_frame: "_top" } do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                          </svg>
+                        <% end %>
+                        
+                        <%= button_to admin_client_path(client), 
+                            method: :delete,
+                            class: "btn btn-ghost btn-sm text-error",
+                            form: { 
+                              data: { 
+                                controller: "confirm-delete",
+                                confirm_delete_item_name_value: client.name,
+                                confirm_delete_item_type_value: "o cliente",
+                                confirm_delete_confirm_text_value: "Sim, Remover Cliente",
+                                confirm_delete_additional_info_value: "Todos os dados relacionados a este cliente serão permanentemente excluídos."
+                              }
+                            } do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                          </svg>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagy Pagination -->
+        <%= render 'shared/pagination', pagy: @pagy %>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-base-content/70 mb-2">Nenhum cliente encontrado</h3>
+          <p class="text-base-content/50 mb-6">
+            <% if params[:search].present? %>
+              Nenhum cliente encontrado para "<%= params[:search] %>".
+            <% else %>
+              Comece adicionando seu primeiro cliente.
+            <% end %>
+          </p>
+          <%= link_to new_admin_client_path, 
+              class: "btn btn-primary", 
+              data: { turbo_frame: "client_form" } do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Adicionar Cliente
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

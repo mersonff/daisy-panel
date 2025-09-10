@@ -1,0 +1,167 @@
+<%= form_with model: [:admin, client], local: true, class: "space-y-6" do |form| %>
+  <% if client.errors.any? %>
+    <div class="alert alert-error" id="error_explanation">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <h3 class="font-bold">Erro ao salvar cliente:</h3>
+        <ul class="list-disc list-inside">
+          <% client.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Dados Pessoais -->
+  <div class="border border-base-300 rounded-lg p-6">
+    <h3 class="text-lg font-semibold mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+      </svg>
+      Dados Pessoais
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="form-control">
+        <%= form.label :name, "Nome *", class: "label" %>
+        <%= form.text_field :name, 
+            class: "input input-bordered #{'input-error' if client.errors[:name].any?}",
+            placeholder: "Nome completo" %>
+        <% if client.errors[:name].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:name].first %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :cpf, "CPF *", class: "label" %>
+        <%= form.text_field :cpf, 
+            class: "input input-bordered #{'input-error' if client.errors[:cpf].any?}",
+            placeholder: "000.000.000-00",
+            data: { 
+              controller: "mask",
+              mask_pattern_value: "000.000.000-00"
+            },
+            maxlength: "14",
+            value: client.persisted? ? client.cpf.gsub(/(\d{3})(\d{3})(\d{3})(\d{2})/, '\1.\2.\3-\4') : client.cpf %>
+        <% if client.errors[:cpf].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:cpf].first %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-control md:col-span-2">
+        <%= form.label :phone, "Telefone *", class: "label" %>
+        <%= form.text_field :phone, 
+            class: "input input-bordered #{'input-error' if client.errors[:phone].any?}",
+            placeholder: "(11) 99999-9999",
+            data: { 
+              controller: "mask",
+              mask_pattern_value: "(00) 00000-0000"
+            } %>
+        <% if client.errors[:phone].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:phone].first %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Endereço -->
+  <div class="border border-base-300 rounded-lg p-6">
+    <h3 class="text-lg font-semibold mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+      </svg>
+      Endereço
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="form-control md:col-span-2">
+        <%= form.label :address, "Endereço *", class: "label" %>
+        <%= form.text_field :address, 
+            class: "input input-bordered #{'input-error' if client.errors[:address].any?}",
+            placeholder: "Rua, número, complemento",
+            id: "client_address" %>
+        <% if client.errors[:address].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:address].first %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :cep, "CEP *", class: "label" %>
+        <%= form.text_field :cep, 
+            class: "input input-bordered #{'input-error' if client.errors[:cep].any?}",
+            placeholder: "00000-000",
+            data: { 
+              controller: "mask cep-lookup",
+              mask_pattern_value: "00000-000",
+              cep_lookup_city_target: "client_city",
+              cep_lookup_state_target: "client_state",
+              cep_lookup_address_target: "client_address"
+            } %>
+        <% if client.errors[:cep].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:cep].first %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :city, "Cidade *", class: "label" %>
+        <%= form.text_field :city, 
+            class: "input input-bordered #{'input-error' if client.errors[:city].any?}",
+            placeholder: "Nome da cidade",
+            id: "client_city" %>
+        <% if client.errors[:city].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:city].first %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :state, "Estado *", class: "label" %>
+        <%= form.select :state,
+            options_for_select([
+              ['AC', 'AC'], ['AL', 'AL'], ['AP', 'AP'], ['AM', 'AM'], ['BA', 'BA'],
+              ['CE', 'CE'], ['DF', 'DF'], ['ES', 'ES'], ['GO', 'GO'], ['MA', 'MA'],
+              ['MT', 'MT'], ['MS', 'MS'], ['MG', 'MG'], ['PA', 'PA'], ['PB', 'PB'],
+              ['PR', 'PR'], ['PE', 'PE'], ['PI', 'PI'], ['RJ', 'RJ'], ['RN', 'RN'],
+              ['RS', 'RS'], ['RO', 'RO'], ['RR', 'RR'], ['SC', 'SC'], ['SP', 'SP'],
+              ['SE', 'SE'], ['TO', 'TO']
+            ], client.state),
+            { prompt: 'Selecione...' },
+            { class: "select select-bordered #{'select-error' if client.errors[:state].any?}",
+              id: "client_state" } %>
+        <% if client.errors[:state].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= client.errors[:state].first %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-4">
+    <%= link_to admin_clients_path, 
+        class: "btn btn-ghost",
+        data: { turbo_frame: "_top" } do %>
+      Cancelar
+    <% end %>
+    
+    <%= form.submit client.persisted? ? "Atualizar Cliente" : "Salvar Cliente", 
+        class: "btn btn-primary",
+        data: { turbo_submits_with: "Salvando..." } %>
+  </div>
+<% end %>
