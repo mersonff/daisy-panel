@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_09_205206) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_10_012926) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_09_205206) do
     t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
+  create_table "import_reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "filename"
+    t.string "status"
+    t.integer "success_count"
+    t.integer "error_count"
+    t.integer "total_lines"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.text "error_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_import_reports_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -45,4 +60,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_09_205206) do
   end
 
   add_foreign_key "clients", "users"
+  add_foreign_key "import_reports", "users"
 end

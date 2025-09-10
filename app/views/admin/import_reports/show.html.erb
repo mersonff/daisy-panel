@@ -1,0 +1,129 @@
+<% content_for :title, "Detalhes da Importação" %>
+<% content_for :layout, "admin" %>
+
+<div class="container mx-auto px-4 py-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Detalhes da Importação</h1>
+    <div class="flex gap-2">
+      <%= link_to "Ver Todos os Relatórios", admin_import_reports_path, class: "btn btn-outline" %>
+      <%= link_to "Voltar para Clientes", admin_clients_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <!-- Resumo da Importação -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="stats shadow">
+      <div class="stat">
+        <div class="stat-title">Total de Linhas</div>
+        <div class="stat-value text-primary"><%= @import_report.total_lines || 0 %></div>
+        <div class="stat-desc">Processadas</div>
+      </div>
+    </div>
+
+    <div class="stats shadow">
+      <div class="stat">
+        <div class="stat-title">Sucessos</div>
+        <div class="stat-value text-success"><%= @import_report.success_count || 0 %></div>
+        <div class="stat-desc"><%= number_to_percentage(@import_report.success_rate, precision: 1) %></div>
+      </div>
+    </div>
+
+    <div class="stats shadow">
+      <div class="stat">
+        <div class="stat-title">Erros</div>
+        <div class="stat-value text-error"><%= @import_report.error_count || 0 %></div>
+        <div class="stat-desc"><%= number_to_percentage(@import_report.error_rate, precision: 1) %></div>
+      </div>
+    </div>
+
+    <div class="stats shadow">
+      <div class="stat">
+        <div class="stat-title">Duração</div>
+        <div class="stat-value text-info">
+          <% if @import_report.duration %>
+            <%= time_ago_in_words(Time.current - @import_report.duration) %>
+          <% else %>
+            -
+          <% end %>
+        </div>
+        <div class="stat-desc">
+          <%= @import_report.created_at.strftime("%d/%m/%Y %H:%M") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <h2 class="card-title">
+        Status da Importação
+        <% case @import_report.status %>
+        <% when 'completed' %>
+          <span class="badge badge-success">Concluído</span>
+        <% when 'processing' %>
+          <span class="badge badge-warning">Processando</span>
+        <% when 'pending' %>
+          <span class="badge badge-info">Pendente</span>
+        <% when 'failed' %>
+          <span class="badge badge-error">Falhou</span>
+        <% end %>
+      </h2>
+      <p>
+        <strong>Arquivo:</strong> <%= @import_report.filename %><br>
+        <strong>Iniciado em:</strong> <%= @import_report.started_at&.strftime("%d/%m/%Y %H:%M:%S") || "Aguardando" %><br>
+        <strong>Concluído em:</strong> <%= @import_report.completed_at&.strftime("%d/%m/%Y %H:%M:%S") || "Em andamento" %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Erros Detalhados -->
+  <% if @errors.any? %>
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-error">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.35 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          Erros Encontrados (<%= @errors.length %>)
+        </h2>
+        
+        <div class="overflow-x-auto">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Linha</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Erros</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @errors.each do |error| %>
+                <tr>
+                  <td class="font-mono"><%= error['line'] %></td>
+                  <td><%= error['name'] %></td>
+                  <td class="font-mono"><%= error['cpf'] %></td>
+                  <td>
+                    <ul class="list-disc list-inside text-sm">
+                      <% error['errors'].each do |err| %>
+                        <li class="text-error"><%= err %></li>
+                      <% end %>
+                    </ul>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% elsif @import_report.completed? %>
+    <div class="alert alert-success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>Todos os clientes foram importados com sucesso! Nenhum erro encontrado.</span>
+    </div>
+  <% end %>
+</div>

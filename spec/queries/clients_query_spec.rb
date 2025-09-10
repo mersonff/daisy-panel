@@ -85,14 +85,14 @@ RSpec.describe ClientsQuery do
         params = { sort: 'name_asc' }
         result = subject.call(params)
         names = result.pluck(:name)
-        expect(names).to eq([ 'João Silva', 'Maria Santos', 'Pedro Oliveira' ])
+        expect(names).to eq([ 'JOÃO SILVA', 'MARIA SANTOS', 'PEDRO OLIVEIRA' ])
       end
 
       it 'sorts by name descending' do
         params = { sort: 'name_desc' }
         result = subject.call(params)
         names = result.pluck(:name)
-        expect(names).to eq([ 'Pedro Oliveira', 'Maria Santos', 'João Silva' ])
+        expect(names).to eq([ 'PEDRO OLIVEIRA', 'MARIA SANTOS', 'JOÃO SILVA' ])
       end
 
       it 'sorts by state ascending' do
@@ -127,7 +127,7 @@ RSpec.describe ClientsQuery do
         params = { sort: 'invalid_sort' }
         result = subject.call(params)
         names = result.pluck(:name)
-        expect(names).to eq([ 'João Silva', 'Maria Santos', 'Pedro Oliveira' ])
+        expect(names).to eq([ 'JOÃO SILVA', 'MARIA SANTOS', 'PEDRO OLIVEIRA' ])
       end
     end
 

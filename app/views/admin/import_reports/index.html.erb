@@ -1,0 +1,83 @@
+<% content_for :title, "Relatórios de Importação" %>
+
+<div class="container mx-auto px-4 py-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Relatórios de Importação</h1>
+    <%= link_to "Voltar para Clientes", admin_clients_path, class: "btn btn-outline" %>
+  </div>
+
+  <% if @import_reports.any? %>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Arquivo</th>
+            <th>Status</th>
+            <th>Total de Linhas</th>
+            <th>Sucessos</th>
+            <th>Erros</th>
+            <th>Taxa de Sucesso</th>
+            <th>Duração</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @import_reports.each do |report| %>
+            <tr>
+              <td>
+                <div class="text-sm">
+                  <%= report.created_at.strftime("%d/%m/%Y") %>
+                  <br>
+                  <span class="text-gray-500"><%= report.created_at.strftime("%H:%M") %></span>
+                </div>
+              </td>
+              <td><%= report.filename %></td>
+              <td>
+                <% case report.status %>
+                <% when 'completed' %>
+                  <span class="badge badge-success">Concluído</span>
+                <% when 'processing' %>
+                  <span class="badge badge-warning">Processando</span>
+                <% when 'pending' %>
+                  <span class="badge badge-info">Pendente</span>
+                <% when 'failed' %>
+                  <span class="badge badge-error">Falhou</span>
+                <% end %>
+              </td>
+              <td><%= report.total_lines || 0 %></td>
+              <td class="text-green-600 font-semibold"><%= report.success_count || 0 %></td>
+              <td class="text-red-600 font-semibold"><%= report.error_count || 0 %></td>
+              <td>
+                <% if report.completed? %>
+                  <div class="text-sm">
+                    <%= number_to_percentage(report.success_rate, precision: 1) %>
+                  </div>
+                <% else %>
+                  <span class="text-gray-400">-</span>
+                <% end %>
+              </td>
+              <td>
+                <% if report.duration %>
+                  <%= time_ago_in_words(Time.current - report.duration) %>
+                <% else %>
+                  <span class="text-gray-400">-</span>
+                <% end %>
+              </td>
+              <td>
+                <% if report.completed? %>
+                  <%= link_to "Ver Detalhes", admin_import_report_path(report), class: "btn btn-sm btn-outline" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-gray-500 text-lg mb-4">Nenhuma importação encontrada</div>
+      <%= link_to "Importar Clientes", admin_clients_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

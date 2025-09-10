@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Mount ActionCable
+  mount ActionCable.server => "/cable"
+
   # Devise routes with custom registrations controller
   devise_for :users, controllers: {
     registrations: "users/registrations"
@@ -14,7 +17,17 @@ Rails.application.routes.draw do
   # Admin panel
   namespace :admin do
     root to: "dashboard#index"
-    resources :clients
+    resources :clients do
+      collection do
+        post :import_csv
+      end
+    end
+
+    resources :import_reports, only: [ :index, :show ] do
+      collection do
+        get :latest
+      end
+    end
     # resources :appointments
   end
 end

@@ -75,15 +75,15 @@ RSpec.describe "Admin::Clients", type: :request do
       it 'sorts by name ascending' do
         get admin_clients_path, params: { sort: 'name', direction: 'asc' }
         clients = assigns(:clients).to_a
-        expect(clients.first.name).to eq('João Silva')
-        expect(clients.last.name).to eq('Maria Santos')
+        expect(clients.first.name).to eq('JOÃO SILVA')
+        expect(clients.last.name).to eq('MARIA SANTOS')
       end
 
       it 'sorts by name descending' do
         get admin_clients_path, params: { sort: 'name_desc' }
         clients = assigns(:clients).to_a
-        expect(clients.first.name).to eq('Maria Santos')
-        expect(clients.last.name).to eq('João Silva')
+        expect(clients.first.name).to eq('MARIA SANTOS')
+        expect(clients.last.name).to eq('JOÃO SILVA')
       end
     end
   end
@@ -195,7 +195,7 @@ RSpec.describe "Admin::Clients", type: :request do
       it 'updates the requested client' do
         put admin_client_path(client), params: { client: new_attributes }
         client.reload
-        expect(client.name).to eq('Cliente Atualizado')
+        expect(client.name).to eq('CLIENTE ATUALIZADO')
       end
 
       it 'redirects to the client' do
