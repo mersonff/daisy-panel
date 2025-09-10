@@ -4,13 +4,13 @@ RSpec.describe "Profile Management", type: :feature do
   let(:user) { create(:user, email: 'user@example.com') }
 
   before do
-    sign_in user
+    sign_in_with_capybara(user)
     visit edit_user_registration_path
   end
 
   describe "Profile edit page" do
     it "displays the profile edit form" do
-      expect(page).to have_content("Editar Perfil")
+      expect(page).to have_content("Informações da Conta")
       expect(page).to have_field("Email", with: user.email)
       expect(page).to have_field("Nova Senha")
       expect(page).to have_field("Confirmar Nova Senha")
@@ -18,8 +18,8 @@ RSpec.describe "Profile Management", type: :feature do
     end
 
     it "has navigation back to dashboard" do
-      expect(page).to have_link("← Voltar ao Painel")
-      click_link "← Voltar ao Painel"
+      expect(page).to have_link("Cancelar")
+      click_link "Cancelar"
       expect(page).to have_current_path(admin_root_path)
     end
 
@@ -37,7 +37,7 @@ RSpec.describe "Profile Management", type: :feature do
         click_button "Atualizar Perfil"
 
         expect(page).to have_content("A sua conta foi atualizada com sucesso")
-        
+
         user.reload
         expect(user.email).to eq("newemail@example.com")
       end
@@ -93,7 +93,7 @@ RSpec.describe "Profile Management", type: :feature do
         fill_in "user_current_password", with: "password123"
         click_button "Atualizar Perfil"
 
-        expect(page).to have_content("Confirme sua senha não é igual a Senha")
+        expect(page).to have_content("Confirmação da senha não é igual a Senha")
       end
     end
 
@@ -104,7 +104,7 @@ RSpec.describe "Profile Management", type: :feature do
         fill_in "user_current_password", with: "password123"
         click_button "Atualizar Perfil"
 
-        expect(page).to have_content("Senha é muito curto")
+        expect(page).to have_content("Senha é muito curta (mínimo: 6 caracteres)")
       end
     end
   end
@@ -119,7 +119,7 @@ RSpec.describe "Profile Management", type: :feature do
     it "shows confirmation dialog when deleting account" do
       # Just test that the button exists and has the right confirmation
       expect(page).to have_button("Excluir Conta Permanentemente")
-      
+
       # Simplified test - just check the button is present
       button = find_button("Excluir Conta Permanentemente")
       expect(button['data-confirm']).to be_present
@@ -158,18 +158,18 @@ RSpec.describe "Profile Management", type: :feature do
   describe "Responsive design" do
     it "displays properly on mobile viewport", js: true do
       page.driver.browser.manage.window.resize_to(375, 667) # iPhone SE size
-      
+
       expect(page).to have_css('.navbar')
-      expect(page).to have_content("Editar Perfil")
-      expect(page).to have_button("Atualizar")
+      expect(page).to have_content("Informações da Conta")
+      expect(page).to have_button("Atualizar Perfil")
     end
 
     it "displays properly on desktop viewport", js: true do
       page.driver.browser.manage.window.resize_to(1920, 1080)
-      
+
       expect(page).to have_css('.navbar')
-      expect(page).to have_content("Editar Perfil")
-      expect(page).to have_button("Atualizar")
+      expect(page).to have_content("Informações da Conta")
+      expect(page).to have_button("Atualizar Perfil")
     end
   end
 end

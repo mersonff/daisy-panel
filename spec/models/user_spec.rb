@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
     context 'when admin does not exist' do
       it 'creates an admin user' do
         expect { User.create_admin('admin@example.com', 'password123') }.to change { User.count }.by(1)
-        
+
         admin = User.last
         expect(admin.email).to eq('admin@example.com')
       end

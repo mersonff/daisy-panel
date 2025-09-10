@@ -13,7 +13,7 @@ RSpec.describe "Admin::Dashboards", type: :request do
     end
 
     context "when user is authenticated" do
-      before { sign_in user }
+      before { sign_in_user(user) }
 
       it "returns http success" do
         get "/admin"
@@ -53,7 +53,7 @@ RSpec.describe "Admin::Dashboards", type: :request do
     end
 
     context "when admin user is authenticated" do
-      before { sign_in admin }
+      before { sign_in_user(admin) }
 
       it "returns http success" do
         get "/admin"
@@ -62,7 +62,7 @@ RSpec.describe "Admin::Dashboards", type: :request do
 
       it "displays admin-specific content" do
         get "/admin"
-        expect(response.body).to include("Daisy Panel - Admin")
+        expect(response.body).to include("Admin - Daisy Panel")
       end
     end
   end

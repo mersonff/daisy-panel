@@ -106,4 +106,39 @@ RSpec.describe "Users::Registrations", type: :request do
       end
     end
   end
+
+  describe "DELETE /users" do
+    context "when user is not authenticated" do
+      it "redirects to login page" do
+        delete user_registration_path
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when user is authenticated" do
+      before { sign_in user }
+
+      it "prevents account deletion" do
+        delete user_registration_path
+        expect(response).to redirect_to(edit_user_registration_path)
+      end
+
+      it "sets a flash alert message" do
+        delete user_registration_path
+        follow_redirect!
+        expect(flash[:alert]).to eq("Exclusão de conta não permitida. Entre em contato com o administrador.")
+      end
+
+      it "does not delete the user" do
+        expect {
+          delete user_registration_path
+        }.not_to change(User, :count)
+      end
+
+      it "keeps the user in the database" do
+        delete user_registration_path
+        expect(User.find(user.id)).to eq(user)
+      end
+    end
+  end
 end
