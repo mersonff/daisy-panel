@@ -1,24 +1,101 @@
-# README
+# Daisy Panel
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Sistema completo de gerenciamento de clientes desenvolvido com Rails 8, Hotwire/Turbo e DaisyUI.
 
-Things you may want to cover:
+## 🚀 Funcionalidades
 
-* Ruby version
+- **CRUD Completo de Clientes**: Criar, visualizar, editar e excluir clientes
+- **Validações Robustas**: CPF, CEP, telefone e estados brasileiros
+- **Busca Avançada**: Por nome, CPF ou telefone com filtros
+- **Interface Responsiva**: Funciona em desktop e mobile
+- **Máscaras Automáticas**: CPF, telefone e CEP com Stimulus
+- **Autenticação**: Sistema completo com Devise
 
-* System dependencies
+## 🛠️ Tecnologias
 
-* Configuration
+- **Ruby 3.3.8**
+- **Rails 8.0.2**
+- **PostgreSQL**
+- **Hotwire/Turbo**
+- **Stimulus**
+- **DaisyUI + TailwindCSS**
+- **RSpec + Capybara**
+- **Pagy (Paginação)**
 
-* Database creation
+## ⚙️ Configuração
 
-* Database initialization
+### 1. Clone o repositório
+```bash
+git clone https://github.com/mersonff/daisy-panel.git
+cd daisy-panel
+```
 
-* How to run the test suite
+### 2. Instale as dependências
+```bash
+bundle install
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### 3. Configure as variáveis de ambiente
+```bash
+cp .env.example .env
+```
 
-* Deployment instructions
+Edite o arquivo `.env` e configure:
+- `DEVISE_SECRET_KEY`: Gere com `rails secret`
+- `DATABASE_URL`: URL do PostgreSQL
+- `POSTGRES_PASSWORD`: Senha do PostgreSQL
 
-* ...
+### 4. Configure o banco de dados
+```bash
+rails db:setup
+```
+
+### 5. Execute os testes
+```bash
+bundle exec rspec
+```
+
+### 6. Inicie o servidor
+```bash
+foreman start -f Procfile.dev
+```
+
+## 🧪 Testes
+
+O projeto possui **100% de cobertura de testes** com **196 testes**:
+
+```bash
+# Executar todos os testes
+bundle exec rspec
+
+# Executar testes específicos
+bundle exec rspec spec/models/
+bundle exec rspec spec/features/
+```
+
+## 🔧 GitHub Actions
+
+O projeto possui CI/CD configurado com:
+- **Análise de segurança** (Brakeman)
+- **Verificação de código** (RuboCop)
+- **Execução de testes** (RSpec)
+
+### Configuração de Secrets
+
+Adicione no GitHub Secrets:
+- `DEVISE_SECRET_KEY`: Chave secreta do Devise
+
+## 📱 Interface
+
+- **Layout responsivo** com DaisyUI
+- **Tema dark/light** automático
+- **Navegação intuitiva**
+- **Feedback visual** em português
+
+## 🚀 Deploy
+
+O projeto está configurado para deploy com Kamal. Ajuste as configurações em `config/deploy.yml`.
+
+---
+
+**Desenvolvido com ❤️ usando Rails 8**
