@@ -51,9 +51,7 @@
 </div>
 
 <script>
-  // TODO: Implement real-time updates with WebSocket/ActionCable
   function updateStats() {
-    // Placeholder for real-time stats
     fetch('/api/stats')
       .then(response => response.json())
       .then(data => {
@@ -70,10 +68,9 @@
           });
         }
       })
-      .catch(error => console.log('Stats not available yet'));
+      .catch(error => {});
   }
   
-  // Update stats every 5 seconds
   updateStats();
   setInterval(updateStats, 5000);
 </script>
