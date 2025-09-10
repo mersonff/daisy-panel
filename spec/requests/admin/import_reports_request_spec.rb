@@ -33,7 +33,7 @@ RSpec.describe "Admin::ImportReports", type: :request do
     it 'limits to 20 reports' do
       # Create 25 reports
       25.times { create(:import_report, user: user) }
-      
+
       get admin_import_reports_path
       expect(assigns(:import_reports).count).to eq(20)
     end
@@ -57,7 +57,7 @@ RSpec.describe "Admin::ImportReports", type: :request do
 
     it 'assigns the errors list' do
       error_details = [
-        { "line" => 2, "name" => "Test User", "cpf" => "12345678900", "errors" => ["Nome inválido"] }
+        { "line" => 2, "name" => "Test User", "cpf" => "12345678900", "errors" => [ "Nome inválido" ] }
       ]
       import_report1.update(error_details: error_details)
 
@@ -144,11 +144,11 @@ RSpec.describe "Admin::ImportReports", type: :request do
   describe 'authorization' do
     it 'only shows reports belonging to current user' do
       get admin_import_reports_path
-      
+
       assigned_reports = assigns(:import_reports)
       user_ids = assigned_reports.pluck(:user_id).uniq
-      
-      expect(user_ids).to eq([user.id])
+
+      expect(user_ids).to eq([ user.id ])
       expect(user_ids).not_to include(other_user.id)
     end
   end
