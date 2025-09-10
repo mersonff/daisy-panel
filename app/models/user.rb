@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  # Relacionamentos
+  has_many :clients, dependent: :destroy
+
   def self.create_admin(email, password)
     create!(email: email, password: password, password_confirmation: password, admin: true)
   end

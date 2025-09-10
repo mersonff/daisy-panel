@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Daisy Panel" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewp    <main id="main-content" class="min-h-screen bg-base-200 <%= 'pt-4' if notice || alert %>">"rt" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -35,7 +35,7 @@
 
   <body>
     <!-- Flash messages fixed at top -->
-    <div class="fixed top-0 left-0 right-0 z-50">
+    <div class="relative z-50">
       <% if notice %>
         <div class="alert alert-success shadow-lg mx-4 mt-4 relative" data-controller="flash" data-flash-autohide-value="5000">
           <div class="flex items-center flex-1">
@@ -65,7 +65,7 @@
       <% end %>
     </div>
 
-    <main id="main-content" class="<%= 'pt-16' if notice || alert %>">
+    <main id="main-content" class="min-h-screen bg-base-200 <%= 'pt-4' if notice || alert %>">
       <%= yield %>
     </main>
   </body>

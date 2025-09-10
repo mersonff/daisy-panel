@@ -20,6 +20,13 @@ gem "jbuilder"
 gem "devise"
 gem "devise-i18n"
 
+# Validation
+gem "cpf_validator"
+gem "cpf_cnpj"
+
+# Pagination
+gem "pagy"
+
 # CSV parsing
 gem "csv"
 
@@ -75,4 +82,6 @@ group :test do
   gem "simplecov", require: false
 end
 
+gem "turbo-rails"
+gem "stimulus-rails"
 gem "vite_rails", "~> 3.0"

@@ -1,0 +1,109 @@
+<% if pagy.pages > 1 %>
+  <div class="flex justify-center mt-8">
+    <div class="join">
+      <!-- Previous Button -->
+      <% if pagy.prev %>
+        <%= link_to url_for(request.params.merge(page: pagy.prev)), 
+            class: "join-item btn btn-outline" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Anterior
+        <% end %>
+      <% else %>
+        <span class="join-item btn btn-outline btn-disabled">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Anterior
+        </span>
+      <% end %>
+      
+      <!-- Page Numbers - Simple approach -->
+      <% if pagy.pages <= 7 %>
+        <!-- Show all pages if 7 or fewer -->
+        <% (1..pagy.pages).each do |page_num| %>
+          <% if page_num == pagy.page %>
+            <span class="join-item btn btn-active"><%= page_num %></span>
+          <% else %>
+            <%= link_to page_num, url_for(request.params.merge(page: page_num)), 
+                class: "join-item btn btn-outline" %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <!-- Show truncated pagination for many pages -->
+        <% if pagy.page <= 4 %>
+          <!-- Show first pages -->
+          <% (1..5).each do |page_num| %>
+            <% if page_num == pagy.page %>
+              <span class="join-item btn btn-active"><%= page_num %></span>
+            <% else %>
+              <%= link_to page_num, url_for(request.params.merge(page: page_num)), 
+                  class: "join-item btn btn-outline" %>
+            <% end %>
+          <% end %>
+          <span class="join-item btn btn-outline btn-disabled">...</span>
+          <%= link_to pagy.pages, url_for(request.params.merge(page: pagy.pages)), 
+              class: "join-item btn btn-outline" %>
+        <% elsif pagy.page >= pagy.pages - 3 %>
+          <!-- Show last pages -->
+          <%= link_to 1, url_for(request.params.merge(page: 1)), 
+              class: "join-item btn btn-outline" %>
+          <span class="join-item btn btn-outline btn-disabled">...</span>
+          <% ((pagy.pages - 4)..pagy.pages).each do |page_num| %>
+            <% if page_num == pagy.page %>
+              <span class="join-item btn btn-active"><%= page_num %></span>
+            <% else %>
+              <%= link_to page_num, url_for(request.params.merge(page: page_num)), 
+                  class: "join-item btn btn-outline" %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <!-- Show middle pages -->
+          <%= link_to 1, url_for(request.params.merge(page: 1)), 
+              class: "join-item btn btn-outline" %>
+          <span class="join-item btn btn-outline btn-disabled">...</span>
+          <% ((pagy.page - 1)..(pagy.page + 1)).each do |page_num| %>
+            <% if page_num == pagy.page %>
+              <span class="join-item btn btn-active"><%= page_num %></span>
+            <% else %>
+              <%= link_to page_num, url_for(request.params.merge(page: page_num)), 
+                  class: "join-item btn btn-outline" %>
+            <% end %>
+          <% end %>
+          <span class="join-item btn btn-outline btn-disabled">...</span>
+          <%= link_to pagy.pages, url_for(request.params.merge(page: pagy.pages)), 
+              class: "join-item btn btn-outline" %>
+        <% end %>
+      <% end %>
+      
+      <!-- Next Button -->
+      <% if pagy.next %>
+        <%= link_to url_for(request.params.merge(page: pagy.next)), 
+            class: "join-item btn btn-outline" do %>
+          Próxima
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        <% end %>
+      <% else %>
+        <span class="join-item btn btn-outline btn-disabled">
+          Próxima
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </span>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Page Info -->
+  <div class="flex items-center justify-between mt-6">
+    <div class="text-sm text-base-content/70">
+      Mostrando <%= pagy.from %>-<%= pagy.to %> de <%= pagy.count %> registros
+    </div>
+    <div class="text-sm text-base-content/70">
+      Página <%= pagy.page %> de <%= pagy.pages %>
+    </div>
+  </div>
+<% end %>

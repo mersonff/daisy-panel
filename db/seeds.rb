@@ -17,3 +17,29 @@ if admin_user.nil?
 else
   puts "Admin user already exists: #{admin_user.email}"
 end
+
+# Create sample clients for testing pagination
+if admin_user.clients.count < 25
+  puts "Creating sample clients for testing..."
+
+  # Configurar Faker para Brasil
+  Faker::Config.locale = :'pt-BR'
+
+  35.times do |index|
+    client = admin_user.clients.create!(
+      name: Faker::Name.name,
+      cpf: Faker::IdNumber.brazilian_citizen_number(formatted: false),
+      phone: Faker::PhoneNumber.cell_phone,
+      address: "#{Faker::Address.street_name}, #{Faker::Address.building_number}",
+      city: Faker::Address.city,
+      state: Faker::Address.state_abbr,
+      cep: Faker::Address.zip_code
+    )
+
+    puts "Created client: #{client.name} - #{client.city}/#{client.state}"
+  end
+
+  puts "Sample clients created successfully! Total: #{admin_user.clients.count}"
+else
+  puts "Sample clients already exist. Total: #{admin_user.clients.count}"
+end

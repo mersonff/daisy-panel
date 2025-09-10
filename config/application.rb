@@ -26,7 +26,7 @@ module DaisyPanel
 
     # Configuração de i18n para português brasileiro
     config.i18n.default_locale = :"pt-BR"
-    config.i18n.available_locales = [:"pt-BR", :en]
-    config.time_zone = 'Brasilia'
+    config.i18n.available_locales = [ :"pt-BR", :en ]
+    config.time_zone = "Brasilia"
   end
 end

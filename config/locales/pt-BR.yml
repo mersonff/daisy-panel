@@ -1,0 +1,64 @@
+pt-BR:
+  activerecord:
+    models:
+      client: "Cliente"
+      user: "Usuário"
+    attributes:
+      client:
+        name: "Nome"
+        address: "Endereço"
+        city: "Cidade"
+        state: "Estado"
+        cep: "CEP"
+        phone: "Telefone"
+        cpf: "CPF"
+        created_at: "Criado em"
+        updated_at: "Atualizado em"
+      user:
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação da senha"
+        remember_me: "Lembrar de mim"
+        created_at: "Criado em"
+        updated_at: "Atualizado em"
+    errors:
+      messages:
+        blank: "não pode ficar em branco"
+        too_short: "é muito curto (mínimo: %{count} caracteres)"
+        too_long: "é muito longo (máximo: %{count} caracteres)"
+        wrong_length: "não possui o tamanho esperado (%{count} caracteres)"
+        taken: "já está em uso"
+        invalid: "não é válido"
+      models:
+        client:
+          attributes:
+            name:
+              blank: "não pode ficar em branco"
+              too_short: "é muito curto (mínimo: %{count} caracteres)"
+            address:
+              blank: "não pode ficar em branco"
+              too_short: "é muito curto (mínimo: %{count} caracteres)"
+            city:
+              blank: "não pode ficar em branco"
+              too_short: "é muito curto (mínimo: %{count} caracteres)"
+            state:
+              blank: "não pode ficar em branco"
+              wrong_length: "não possui o tamanho esperado (%{count} caracteres)"
+            cep:
+              blank: "não pode ficar em branco"
+              invalid: "deve ter formato 12345-678"
+            phone:
+              blank: "não pode ficar em branco"
+              invalid: "deve ter formato (11) 99999-9999"
+            cpf:
+              blank: "não pode ficar em branco"
+              invalid: "não é válido"
+              taken: "já está cadastrado"
+        user:
+          attributes:
+            email:
+              taken: "já está em uso"
+              invalid: "não é válido"
+            password:
+              too_short: "é muito curta (mínimo: %{count} caracteres)"
+              confirmation: "não confere"

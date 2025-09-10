@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :authenticate_user!, except: [:new, :create]
+  before_action :authenticate_user!, except: [ :new, :create ]
+  layout "admin", only: [ :edit, :update ]
 
   # Disable new user registration
   def new
