@@ -75,15 +75,15 @@ RSpec.describe "Admin::Clients", type: :request do
       it 'sorts by name ascending' do
         get admin_clients_path, params: { sort: 'name', direction: 'asc' }
         clients = assigns(:clients).to_a
-        expect(clients.first.name).to eq('João Silva')
-        expect(clients.last.name).to eq('Maria Santos')
+        expect(clients.first.name).to eq('JOÃO SILVA')
+        expect(clients.last.name).to eq('MARIA SANTOS')
       end
 
       it 'sorts by name descending' do
         get admin_clients_path, params: { sort: 'name_desc' }
         clients = assigns(:clients).to_a
-        expect(clients.first.name).to eq('Maria Santos')
-        expect(clients.last.name).to eq('João Silva')
+        expect(clients.first.name).to eq('MARIA SANTOS')
+        expect(clients.last.name).to eq('JOÃO SILVA')
       end
     end
   end
@@ -195,7 +195,7 @@ RSpec.describe "Admin::Clients", type: :request do
       it 'updates the requested client' do
         put admin_client_path(client), params: { client: new_attributes }
         client.reload
-        expect(client.name).to eq('Cliente Atualizado')
+        expect(client.name).to eq('CLIENTE ATUALIZADO')
       end
 
       it 'redirects to the client' do
@@ -254,6 +254,136 @@ RSpec.describe "Admin::Clients", type: :request do
       delete admin_client_path(other_user_client)
       expect(response).to have_http_status(:found)
       expect(response).to redirect_to(admin_clients_path)
+    end
+  end
+
+  describe 'POST /admin/clients/import_csv' do
+    let(:csv_content) { "nome,cpf\nJoão Silva,#{CPF.generate}" }
+    let(:csv_file) do
+      Tempfile.new([ 'test', '.csv' ]).tap do |file|
+        file.write(csv_content)
+        file.rewind
+      end
+    end
+
+    after do
+      csv_file.close
+      csv_file.unlink
+    end
+
+    context 'with valid CSV file' do
+      before do
+        allow(CsvImportService).to receive(:new).and_return(
+          double('service', call: {
+            message: "Importação iniciada! Você será notificado quando concluída.",
+            import_report_id: 123,
+            status: "processing",
+            total_lines: 2
+          })
+        )
+      end
+
+      it 'delegates to CsvImportService' do
+        service_double = double('service')
+        uploaded_file = Rack::Test::UploadedFile.new(csv_file.path, 'text/csv')
+
+        expect(CsvImportService).to receive(:new).with(user, an_instance_of(ActionDispatch::Http::UploadedFile)).and_return(service_double)
+        expect(service_double).to receive(:call).and_return({
+          message: "Importação iniciada! Você será notificado quando concluída.",
+          import_report_id: 123,
+          status: "processing",
+          total_lines: 2
+        })
+
+        post import_csv_admin_clients_path, params: { csv_file: uploaded_file }
+      end
+
+      it 'returns success response' do
+        uploaded_file = Rack::Test::UploadedFile.new(csv_file.path, 'text/csv')
+
+        post import_csv_admin_clients_path, params: { csv_file: uploaded_file }
+
+        expect(response).to have_http_status(:success)
+        json_response = JSON.parse(response.body)
+        expect(json_response['message']).to eq("Importação iniciada! Você será notificado quando concluída.")
+        expect(json_response['import_report_id']).to eq(123)
+        expect(json_response['status']).to eq("processing")
+        expect(json_response['total_lines']).to eq(2)
+      end
+    end
+
+    context 'when service returns error' do
+      before do
+        allow(CsvImportService).to receive(:new).and_return(
+          double('service', call: {
+            error: "Nenhum arquivo foi enviado",
+            status: :unprocessable_content
+          })
+        )
+      end
+
+      it 'returns error response' do
+        post import_csv_admin_clients_path, params: { csv_file: nil }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq("Nenhum arquivo foi enviado")
+      end
+    end
+
+    context 'when service returns validation error' do
+      before do
+        allow(CsvImportService).to receive(:new).and_return(
+          double('service', call: {
+            error: "Por favor, envie um arquivo CSV válido",
+            status: :unprocessable_content
+          })
+        )
+      end
+
+      it 'returns validation error response' do
+        invalid_file = Rack::Test::UploadedFile.new(csv_file.path, 'text/plain')
+
+        post import_csv_admin_clients_path, params: { csv_file: invalid_file }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq("Por favor, envie um arquivo CSV válido")
+      end
+    end
+
+    context 'when service returns internal server error' do
+      before do
+        allow(CsvImportService).to receive(:new).and_return(
+          double('service', call: {
+            error: "Erro interno do servidor",
+            status: :internal_server_error
+          })
+        )
+      end
+
+      it 'returns internal server error response' do
+        uploaded_file = Rack::Test::UploadedFile.new(csv_file.path, 'text/csv')
+
+        post import_csv_admin_clients_path, params: { csv_file: uploaded_file }
+
+        expect(response).to have_http_status(:internal_server_error)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq("Erro interno do servidor")
+      end
+    end
+
+    context 'without authentication' do
+      before do
+        sign_out user
+      end
+
+      it 'redirects to login' do
+        uploaded_file = Rack::Test::UploadedFile.new(csv_file.path, 'text/csv')
+
+        post import_csv_admin_clients_path, params: { csv_file: uploaded_file }
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 

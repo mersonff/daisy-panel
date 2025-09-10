@@ -7,6 +7,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    
+    <% if user_signed_in? %>
+      <meta name="current-user" content="<%= current_user.id %>">
+    <% end %>
 
     <%= yield :head %>
 

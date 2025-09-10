@@ -12,7 +12,7 @@ RSpec.feature 'Client Management', type: :feature do
     visit admin_clients_path
 
     expect(page).to have_content('Clientes')
-    expect(page).to have_content('João Silva')
+    expect(page).to have_content('JOÃO SILVA')
     expect(page).to have_content(client.cpf.gsub(/(\d{3})(\d{3})(\d{3})(\d{2})/, '\1.\2.\3-\4'))
     expect(page).to have_content(client.phone)
     expect(page).to have_content("#{client.city}/#{client.state}")
@@ -35,7 +35,7 @@ RSpec.feature 'Client Management', type: :feature do
     click_button 'Salvar Cliente'
 
     expect(page).to have_content('Cliente foi criado com sucesso.')
-    expect(page).to have_content('Maria Santos')
+    expect(page).to have_content('MARIA SANTOS')
   end
 
   scenario 'User views client details' do
@@ -64,7 +64,7 @@ RSpec.feature 'Client Management', type: :feature do
     click_button 'Atualizar Cliente'
 
     expect(page).to have_content('Cliente foi atualizado com sucesso.')
-    expect(page).to have_content('João Silva Editado')
+    expect(page).to have_content('JOÃO SILVA EDITADO')
   end
 
   scenario 'User searches for clients' do
@@ -76,8 +76,8 @@ RSpec.feature 'Client Management', type: :feature do
     select 'Nome', from: 'search_type'
     click_button 'Buscar'
 
-    expect(page).to have_content('João Silva')
-    expect(page).to_not have_content('Maria Santos')
+    expect(page).to have_content('JOÃO SILVA')
+    expect(page).to_not have_content('MARIA SANTOS')
   end
 
   scenario 'User sorts clients' do
@@ -91,8 +91,8 @@ RSpec.feature 'Client Management', type: :feature do
 
     # Verifica se a ordem está correta (Z-A)
     client_names = page.all('td .font-bold').map(&:text)
-    expect(client_names.first).to eq('Zeca Lima')
-    expect(client_names.last).to eq('Ana Costa')
+    expect(client_names.first).to eq('ZECA LIMA')
+    expect(client_names.last).to eq('ANA COSTA')
   end
 
   scenario 'User deletes a client', js: true do

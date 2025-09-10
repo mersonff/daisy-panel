@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
   static values = { autohide: Number }
@@ -21,11 +21,11 @@ export default class extends Controller {
     if (this.timeout) {
       clearTimeout(this.timeout)
     }
-    
-    this.element.style.transition = "opacity 0.3s ease-out, transform 0.3s ease-out"
-    this.element.style.opacity = "0"
-    this.element.style.transform = "translateY(-20px)"
-    
+
+    this.element.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out'
+    this.element.style.opacity = '0'
+    this.element.style.transform = 'translateY(-20px)'
+
     setTimeout(() => {
       this.element.remove()
     }, 300)

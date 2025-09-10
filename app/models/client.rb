@@ -43,17 +43,12 @@ class Client < ApplicationRecord
   before_validation :format_cep
   before_validation :format_phone
   before_validation :upcase_state
+  before_validation :upcase_name
 
   # Método to_s para representação em string
   def to_s
     name
   end
-
-  # Callbacks para formatação
-  before_validation :format_cpf
-  before_validation :format_cep
-  before_validation :format_phone
-  before_validation :upcase_state
 
   private
 
@@ -79,6 +74,10 @@ class Client < ApplicationRecord
 
   def upcase_state
     self.state = state.upcase if state.present?
+  end
+
+  def upcase_name
+    self.name = name.upcase if name.present?
   end
 
   def phone_format_validation

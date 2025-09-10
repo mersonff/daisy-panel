@@ -1,7 +1,6 @@
-class Admin::ClientsController < ApplicationController
+class Admin::ClientsController < Admin::DashboardController
   before_action :authenticate_user!
   before_action :set_client, only: %i[show edit update destroy]
-  layout "admin"
 
   def index
     clients_scope = ClientsQuery.new(current_user.clients).call(params)
@@ -39,6 +38,16 @@ class Admin::ClientsController < ApplicationController
   def destroy
     @client.destroy!
     redirect_to admin_clients_path, notice: "Cliente foi removido com sucesso."
+  end
+
+  def import_csv
+    result = CsvImportService.new(current_user, params[:csv_file]).call
+
+    if result[:error]
+      render json: { error: result[:error] }, status: result[:status]
+    else
+      render json: result
+    end
   end
 
   private
