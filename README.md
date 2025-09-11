@@ -92,9 +92,31 @@ Adicione no GitHub Secrets:
 - **Navegação intuitiva**
 - **Feedback visual** em português
 
+## 🌐 Aplicação em Produção
+
+A aplicação está rodando em produção na AWS:
+**https://daisy-panel-alb-1719230918.us-east-1.elb.amazonaws.com**
+
+### Credenciais de Admin
+- Email: `admin@daisypanel.com`
+- Senha: `password`
+
+## 🔧 Dados Iniciais (Seed)
+
+Para popular o banco com dados de exemplo:
+
+```bash
+rails db:seed
+```
+
+Isso criará:
+- Usuário admin com as credenciais acima
+- 35 clientes de exemplo
+- Alguns compromissos de teste
+
 ## 🚀 Deploy
 
-O projeto está configurado para deploy com Kamal. Ajuste as configurações em `config/deploy.yml`.
+O projeto está configurado para deploy na AWS ECS Fargate com Load Balancer e SSL.
 
 ---
 
