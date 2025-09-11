@@ -216,7 +216,7 @@ RSpec.describe CsvImportJob, type: :job do
 
         it 'complements short addresses' do
           data = job.send(:extract_client_data, row)
-          expect(data[:address]).to eq('s/n, número não informado')
+          expect(data[:address]).to eq('s/n')
         end
       end
 
@@ -235,45 +235,17 @@ RSpec.describe CsvImportJob, type: :job do
         end
       end
 
-      context 'with invalid CPF length' do
-        let(:row) do
-          {
-            nome: 'Test',
-            cpf: '123456789'  # 9 digits instead of 11
-          }
-        end
-
-        it 'sets CPF to nil for invalid length' do
-          data = job.send(:extract_client_data, row)
-          expect(data[:cpf]).to be_nil
-        end
-      end
-
       context 'with incomplete CEP' do
         let(:row) do
           {
             nome: 'Test',
-            cep: '12345'  # 5 digits instead of 8
+            cep: '12345'
           }
         end
 
-        it 'complements incomplete CEP' do
+        it 'returns the value and validation error' do
           data = job.send(:extract_client_data, row)
-          expect(data[:cep]).to eq('12345-000')
-        end
-      end
-
-      context 'with invalid CEP length' do
-        let(:row) do
-          {
-            nome: 'Test',
-            cep: '123'  # Too short
-          }
-        end
-
-        it 'sets CEP to nil for invalid length' do
-          data = job.send(:extract_client_data, row)
-          expect(data[:cep]).to be_nil
+          expect(data[:cep]).to eq('12345')
         end
       end
     end

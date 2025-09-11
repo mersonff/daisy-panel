@@ -34,7 +34,7 @@
           <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
             <li><%= link_to "Dashboard", admin_root_path %></li>
             <li><%= link_to "Clientes", admin_clients_path %></li>
-            <li><a href="#appointments">Compromissos</a></li>
+            <li><%= link_to "Compromissos", admin_appointments_path %></li>
           </ul>
         </div>
         <%= link_to admin_root_path, class: "btn btn-ghost normal-case text-xl" do %>
@@ -48,7 +48,7 @@
         <ul class="menu menu-horizontal px-1">
           <li><%= link_to "Dashboard", admin_root_path %></li>
           <li><%= link_to "Clientes", admin_clients_path %></li>
-          <li><a href="#appointments">Compromissos</a></li>
+            <li><%= link_to "Compromissos", admin_appointments_path %></li>
         </ul>
       </div>
       <div class="navbar-end">

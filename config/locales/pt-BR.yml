@@ -3,6 +3,7 @@ pt-BR:
     models:
       client: "Cliente"
       user: "Usuário"
+      appointment: "Compromisso"
     attributes:
       client:
         name: "Nome"
@@ -19,6 +20,13 @@ pt-BR:
         password: "Senha"
         password_confirmation: "Confirmação da senha"
         remember_me: "Lembrar de mim"
+        created_at: "Criado em"
+        updated_at: "Atualizado em"
+      appointment:
+        name: "Nome"
+        start_time: "Data e hora de início"
+        end_time: "Data e hora de término"
+        user: "Usuário"
         created_at: "Criado em"
         updated_at: "Atualizado em"
     errors:
@@ -62,3 +70,13 @@ pt-BR:
             password:
               too_short: "é muito curta (mínimo: %{count} caracteres)"
               confirmation: "não confere"
+        appointment:
+          attributes:
+            name:
+              blank: "não pode ficar em branco"
+              too_short: "é muito curto (mínimo: %{count} caracteres)"
+              too_long: "é muito longo (máximo: %{count} caracteres)"
+            start_time:
+              blank: "não pode ficar em branco"
+            end_time:
+              blank: "não pode ficar em branco"

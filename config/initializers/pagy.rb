@@ -2,6 +2,7 @@
 
 require "pagy/extras/bootstrap"
 require "pagy/extras/overflow"
+require "pagy/extras/array"
 
 # Pagy global configuration
 Pagy::DEFAULT[:items] = 10          # Items per page

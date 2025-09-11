@@ -7,7 +7,8 @@ class Admin::ImportReportsController < Admin::DashboardController
   end
 
   def show
-    @errors = @import_report.errors_list
+    errors_list = @import_report.errors_list
+    @pagy, @errors = pagy_array(errors_list, items: 20)
   end
 
   def latest

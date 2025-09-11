@@ -16,17 +16,14 @@ class CsvImportJob < ApplicationJob
       errors_count = 0
       detailed_errors = []
 
-      # Parse CSV content
       csv_data = CSV.parse(csv_content, headers: true, header_converters: :symbol)
 
       csv_data.each_with_index do |row, index|
-        line_number = index + 2 # +2 porque é linha 2 no arquivo (após header)
+        line_number = index + 2
 
         begin
-          # Extrair dados da linha
           client_data = extract_client_data(row)
 
-          # Criar cliente
           client = import_report.user.clients.build(client_data)
 
           if client.save
@@ -60,7 +57,6 @@ class CsvImportJob < ApplicationJob
         completed_at: Time.current
       )
 
-      # Broadcast via ActionCable
       Rails.logger.info "Broadcasting import completion for user #{import_report.user_id}"
       broadcast_data = {
         type: "import_completed",
@@ -87,7 +83,6 @@ class CsvImportJob < ApplicationJob
         completed_at: Time.current
       )
 
-      # Broadcast error
       ActionCable.server.broadcast(
         "import_notifications_#{import_report.user_id}",
         {
@@ -102,10 +97,8 @@ class CsvImportJob < ApplicationJob
   private
 
   def extract_client_data(row)
-    # Detectar automaticamente as colunas baseado nos headers
     data = {}
 
-    # Mapear campos automaticamente
     row.each do |key, value|
       next if value.blank?
 
@@ -116,34 +109,21 @@ class CsvImportJob < ApplicationJob
       when /nome|name/
         data[:name] = value
       when /cpf/
-        cpf_clean = value.gsub(/\D/, "") # Remove formatação
-        # Garantir que CPF tenha 11 dígitos
-        data[:cpf] = cpf_clean.length == 11 ? cpf_clean : nil
+        data[:cpf] = value.gsub(/\D/, "")
       when /telefone|phone|fone/
         data[:phone] = value
       when /endereo|endereço|endereco|address/
-        # Tratar endereços muito curtos
-        address_value = value.strip
-        if address_value.length < 5
-          # Se o endereço é muito curto (como "s/n"), complementar
-          data[:address] = "#{address_value}, número não informado"
-        else
-          data[:address] = address_value
-        end
+        data[:address] = value
       when /cidade|city/
         data[:city] = value
       when /estado|state|uf/
         data[:state] = convert_state_name_to_acronym(value)
       when /cep|zipcode/
-        cep_clean = value.gsub(/\D/, "") # Remove formatação
-        # Formatar CEP para o padrão esperado
-        if cep_clean.length == 8
-          data[:cep] = "#{cep_clean[0..4]}-#{cep_clean[5..7]}"
-        elsif cep_clean.length == 5
-          # CEP incompleto, tentar complementar
-          data[:cep] = "#{cep_clean}-000"
+        clean_cep = value.gsub(/\D/, "")
+        if clean_cep.length == 8
+          data[:cep] = "#{clean_cep[0..4]}-#{clean_cep[5..7]}"
         else
-          data[:cep] = nil
+          data[:cep] = clean_cep
         end
       end
     end
@@ -152,7 +132,7 @@ class CsvImportJob < ApplicationJob
   end
 
   def convert_state_name_to_acronym(state_name)
-    return state_name if state_name.length <= 2 # Já é sigla
+    return state_name if state_name.length <= 2
 
     mapping = {
       "acre" => "AC",
