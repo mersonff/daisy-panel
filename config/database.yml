@@ -23,10 +23,16 @@ default: &default
 development:
   primary: &primary_development
     <<: *default
+    # Use DATABASE_URL if available (from .env file or Docker), otherwise fallback to individual settings
+    <% if ENV['DATABASE_URL'] %>
+    url: <%= ENV['DATABASE_URL'] %>
+    <% else %>
     database: daisy_panel_development
     username: postgres
     password: postgres
     host: localhost
+    port: 5432
+    <% end %>
   cache:
     <<: *primary_development
   queue:

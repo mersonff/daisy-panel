@@ -2,7 +2,12 @@ import { Chart, registerables } from 'chart.js'
 
 Chart.register(...registerables)
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('turbo:load', () => {
+  initClientsChart()
+  initAppointmentsChart()
+})
+
+document.addEventListener('turbo:render', () => {
   initClientsChart()
   initAppointmentsChart()
 })
