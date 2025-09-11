@@ -46,3 +46,13 @@ node_modules
 # Coverage reports
 /coverage/
 
+# Security files
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+private.key
+cert.pem
+certificate.pem
+

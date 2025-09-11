@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     dashboard_path
   end
 
+  def health
+    render json: { status: "ok", timestamp: Time.current }
+  end
+
   private
 
   def record_not_found

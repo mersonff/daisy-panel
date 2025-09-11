@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Health check endpoint for AWS
+  get "health", to: "application#health"
+
   # Mount ActionCable
   mount ActionCable.server => "/cable"
 

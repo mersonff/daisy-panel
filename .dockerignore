@@ -49,3 +49,19 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Security files
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+private.key
+cert.pem
+certificate.pem
+
+# Test and example files
+*.csv
+test_*.csv
+exemplo_*.csv
+debug_*.rb
