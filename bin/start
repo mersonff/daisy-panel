@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Start Solid Queue worker in background
+rails solid_queue:start &
+
+# Start the Rails server (default port 3000 or PORT env var)
+exec rails server -b 0.0.0.0 -p ${PORT:-3000}
