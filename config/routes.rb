@@ -28,5 +28,7 @@ Rails.application.routes.draw do
         get :latest
       end
     end
+
+    resources :appointments
   end
 end

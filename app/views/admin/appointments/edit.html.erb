@@ -1,0 +1,22 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="flex items-center gap-4 mb-8">
+    <%= link_to admin_appointment_path(@appointment), 
+        class: "btn btn-ghost btn-sm" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+    <% end %>
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Editar Compromisso</h1>
+      <p class="text-base-content/70">Atualize os dados do compromisso "<%= @appointment.name %>"</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <%= render "form", appointment: @appointment %>
+    </div>
+  </div>
+</div>

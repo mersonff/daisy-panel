@@ -1,0 +1,203 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Flash Messages -->
+  <div id="flash_messages"></div>
+  
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-base-content">Compromissos</h1>
+      <p class="text-base-content/70">Gerencie seus compromissos agendados</p>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to new_admin_appointment_path, 
+          class: "btn btn-primary",
+          data: { turbo_frame: "_top" } do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Novo Compromisso
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <%= form_with url: admin_appointments_path, method: :get, local: true, class: "form-control" do |form| %>
+        <div class="flex flex-col lg:flex-row gap-4">
+          <!-- Search Section -->
+          <div class="flex-1">
+            <label class="label">
+              <span class="label-text font-semibold">Buscar Compromisso</span>
+            </label>
+            <%= form.text_field :search, 
+                placeholder: "Digite o nome do compromisso...", 
+                value: params[:search],
+                class: "input input-bordered w-full" %>
+          </div>
+          
+          <!-- Filter by Status -->
+          <div class="lg:w-48">
+            <label class="label">
+              <span class="label-text font-semibold">Status</span>
+            </label>
+            <%= form.select :status, 
+                options_for_select([
+                  ['Todos', ''],
+                  ['Próximos', 'upcoming'],
+                  ['Em andamento', 'ongoing'],
+                  ['Passados', 'past']
+                ], params[:status]),
+                {}, 
+                { class: "select select-bordered w-full" } %>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex gap-2 lg:self-end">
+            <%= form.submit "Buscar", class: "btn btn-primary" %>
+            <%= link_to "Limpar", admin_appointments_path, class: "btn btn-ghost" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <% if @appointments.any? %>
+        <!-- Stats -->
+        <div class="stats stats-horizontal shadow mb-6">
+          <div class="stat">
+            <div class="stat-title">Total de Compromissos</div>
+            <div class="stat-value"><%= @appointments.count %></div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Próximos</div>
+            <div class="stat-value text-info"><%= current_user.appointments.upcoming.count %></div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Em Andamento</div>
+            <div class="stat-value text-warning"><%= current_user.appointments.ongoing.count %></div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Passados</div>
+            <div class="stat-value text-base-content/50"><%= current_user.appointments.past.count %></div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Data/Hora</th>
+                <th>Duração</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @appointments.each do |appointment| %>
+                <tr>
+                  <td>
+                    <div class="font-bold"><%= appointment.name %></div>
+                  </td>
+                  <td>
+                    <div class="text-sm">
+                      <div class="font-medium">
+                        <%= l(appointment.start_time, format: "%d/%m/%Y às %H:%M") %>
+                      </div>
+                      <div class="text-base-content/70">
+                        até <%= l(appointment.end_time, format: "%H:%M") %>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-sm">
+                      <%= appointment.duration %> horas
+                    </div>
+                  </td>
+                  <td>
+                    <% status_class = case appointment.status
+                         when 'upcoming' then 'badge-info'
+                         when 'ongoing' then 'badge-warning'
+                         when 'past' then 'badge-ghost'
+                         else 'badge-ghost'
+                       end %>
+                    <div class="badge <%= status_class %>">
+                      <%= case appointment.status
+                          when 'upcoming' then 'Próximo'
+                          when 'ongoing' then 'Em andamento'
+                          when 'past' then 'Passado'
+                          else appointment.status
+                          end %>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex gap-2">
+                      <%= link_to admin_appointment_path(appointment), class: "btn btn-ghost btn-sm" do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                      <% end %>
+                      
+                      <%= link_to edit_admin_appointment_path(appointment), 
+                          class: "btn btn-ghost btn-sm",
+                          data: { turbo_frame: "_top" } do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      <% end %>
+                      
+                      <%= button_to admin_appointment_path(appointment), 
+                          method: :delete,
+                          class: "btn btn-ghost btn-sm text-error",
+                          form: { 
+                            data: { 
+                              controller: "confirm-delete",
+                              confirm_delete_item_name_value: appointment.name,
+                              confirm_delete_item_type_value: "o compromisso",
+                              confirm_delete_confirm_text_value: "Sim, Remover Compromisso",
+                              confirm_delete_additional_info_value: "Este compromisso será permanentemente excluído."
+                            }
+                          } do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-base-content/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 9l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-base-content/70 mb-2">Nenhum compromisso encontrado</h3>
+          <p class="text-base-content/50 mb-6">
+            <% if params[:search].present? %>
+              Nenhum compromisso encontrado para "<%= params[:search] %>".
+            <% else %>
+              Comece adicionando seu primeiro compromisso.
+            <% end %>
+          </p>
+          <%= link_to new_admin_appointment_path, 
+              class: "btn btn-primary" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Adicionar Compromisso
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

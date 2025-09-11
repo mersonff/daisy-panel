@@ -1,0 +1,122 @@
+<%= form_with model: [:admin, appointment], local: true, class: "space-y-6" do |form| %>
+  <% if appointment.errors.any? %>
+    <div class="alert alert-error" id="error_explanation">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <h3 class="font-bold">Erro ao salvar compromisso:</h3>
+        <ul class="list-disc list-inside">
+          <% appointment.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Informações do Compromisso -->
+  <div class="border border-base-300 rounded-lg p-6">
+    <h3 class="text-lg font-semibold mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 9l2 2 4-4m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      Informações do Compromisso
+    </h3>
+    
+    <div class="grid grid-cols-1 gap-4">
+      <div class="form-control">
+        <%= form.label :name, "Nome do Compromisso *", class: "label" %>
+        <%= form.text_field :name, 
+            class: "input input-bordered #{'input-error' if appointment.errors[:name].any?}",
+            placeholder: "Ex: Reunião com cliente, Consulta médica, etc." %>
+        <% if appointment.errors[:name].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= appointment.errors[:name].first %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data e Horário -->
+  <div class="border border-base-300 rounded-lg p-6">
+    <h3 class="text-lg font-semibold mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      Data e Horário
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="form-control">
+        <%= form.label :start_time, "Data e Hora de Início *", class: "label" %>
+        <%= form.datetime_local_field :start_time, 
+            class: "input input-bordered #{'input-error' if appointment.errors[:start_time].any?}",
+            value: appointment.start_time&.strftime("%Y-%m-%dT%H:%M") %>
+        <% if appointment.errors[:start_time].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= appointment.errors[:start_time].first %></span>
+          </label>
+        <% end %>
+        <label class="label">
+          <span class="label-text-alt">Selecione a data e hora de início do compromisso</span>
+        </label>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :end_time, "Data e Hora de Término *", class: "label" %>
+        <%= form.datetime_local_field :end_time, 
+            class: "input input-bordered #{'input-error' if appointment.errors[:end_time].any?}",
+            value: appointment.end_time&.strftime("%Y-%m-%dT%H:%M") %>
+        <% if appointment.errors[:end_time].any? %>
+          <label class="label">
+            <span class="label-text-alt text-error"><%= appointment.errors[:end_time].first %></span>
+          </label>
+        <% end %>
+        <label class="label">
+          <span class="label-text-alt">Selecione a data e hora de término do compromisso</span>
+        </label>
+      </div>
+    </div>
+
+    <% if appointment.persisted? && appointment.duration %>
+      <div class="mt-4 p-4 bg-base-200 rounded-lg">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span class="text-sm">
+            <strong>Duração calculada:</strong> <%= appointment.duration %> horas
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Validação de Conflitos -->
+  <% if appointment.errors[:base].any? %>
+    <div class="alert alert-warning">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+      </svg>
+      <div>
+        <h4 class="font-bold">Conflito de horário detectado:</h4>
+        <p><%= appointment.errors[:base].first %></p>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-4">
+    <%= link_to admin_appointments_path, 
+        class: "btn btn-ghost",
+        data: { turbo_frame: "_top" } do %>
+      Cancelar
+    <% end %>
+    
+    <%= form.submit appointment.persisted? ? "Atualizar Compromisso" : "Salvar Compromisso", 
+        class: "btn btn-primary",
+        data: { turbo_submits_with: "Salvando..." } %>
+  </div>
+<% end %>

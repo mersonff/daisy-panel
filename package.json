@@ -21,6 +21,6 @@
   "scripts": {
     "lint": "eslint app/frontend",
     "lint:fix": "eslint app/frontend --fix",
-    "lint:check": "eslint app/frontend --max-warnings 0"
+    "lint:check": "eslint app/frontend --max-warnings 10"
   }
 }

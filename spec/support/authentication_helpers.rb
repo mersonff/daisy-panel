@@ -12,6 +12,11 @@ module AuthenticationHelpers
     follow_redirect!
   end
 
+  # Helper method for request tests that need to sign out
+  def sign_out_user
+    delete destroy_user_session_path
+  end
+
   # Helper method for feature tests using Capybara
   def sign_in_with_capybara(user)
     visit new_user_session_path

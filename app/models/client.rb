@@ -1,12 +1,10 @@
 class Client < ApplicationRecord
   belongs_to :user
 
-  # Estados válidos do Brasil
   VALID_STATES = %w[
     AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO
   ].freeze
 
-  # Validações dos campos obrigatórios
   validates :name, presence: true, length: { minimum: 2, maximum: 100 }
   validates :address, presence: true, length: { minimum: 5, maximum: 200 }
   validates :city, presence: true, length: { minimum: 2, maximum: 100 }
@@ -15,10 +13,8 @@ class Client < ApplicationRecord
   validates :phone, presence: true
   validates :cpf, presence: true, uniqueness: { scope: :user_id, message: "já está cadastrado" }, cpf: true
 
-  # Validação customizada para telefone
   validate :phone_format_validation
 
-  # Scopes para busca
   scope :search_by_name, ->(name) { where("name ILIKE ?", "%#{name}%") }
   scope :search_by_cpf, ->(cpf) { where("cpf ILIKE ?", "%#{cpf.gsub(/\D/, '')}%") }
   scope :search_by_phone, ->(phone) { where("phone ILIKE ?", "%#{phone}%") }
@@ -26,11 +22,9 @@ class Client < ApplicationRecord
     sanitized_cpf = term.gsub(/\D/, "")
 
     if sanitized_cpf.present?
-      # Se o termo contém números, busca em nome, CPF e telefone
       where("name ILIKE ? OR cpf ILIKE ? OR phone ILIKE ?",
             "%#{term}%", "%#{sanitized_cpf}%", "%#{term}%")
     else
-      # Se o termo não contém números, busca apenas em nome e telefone
       where("name ILIKE ? OR phone ILIKE ?", "%#{term}%", "%#{term}%")
     end
   }
@@ -38,7 +32,6 @@ class Client < ApplicationRecord
   scope :order_by_state, -> { order(:state, :city, :name) }
   scope :order_by_created_at, -> { order(created_at: :desc) }
 
-  # Callbacks para formatação
   before_validation :format_cpf
   before_validation :format_cep
   before_validation :format_phone
