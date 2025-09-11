@@ -29,15 +29,10 @@ development:
     host: localhost
   cache:
     <<: *primary_development
-    database: daisy_panel_development_cache
-    migrations_paths: db/cache_migrate
   queue:
     <<: *primary_development
-    database: daisy_panel_development_queue
-    migrations_paths: db/queue_migrate
   cable:
     <<: *primary_development
-    database: daisy_panel_development_cable
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -87,16 +82,10 @@ test:
     port: 5432
   cache:
     <<: *primary_test
-    database: daisy_panel_test_cache
-    migrations_paths: db/cache_migrate
   queue:
     <<: *primary_test
-    database: daisy_panel_test_queue
-    migrations_paths: db/queue_migrate
   cable:
     <<: *primary_test
-    database: daisy_panel_test_cable
-    migrations_paths: db/cable_migrate
   <% end %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
@@ -120,5 +109,12 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    <<: *primary_production
+  queue:
+    <<: *primary_production
+  cable:
+    <<: *primary_production
