@@ -97,7 +97,6 @@ RSpec.describe "Admin::Dashboards", type: :request do
       end
 
       it "includes clients created in the last 30 days" do
-        # Create clients at different dates
         travel_to 10.days.ago do
           create(:client, user: user)
           create(:client, user: user)
@@ -169,7 +168,6 @@ RSpec.describe "Admin::Dashboards", type: :request do
       end
 
       it "includes appointments created in the last 30 days" do
-        # Create appointments at different dates
         travel_to 10.days.ago do
           create(:appointment, user: user)
           create(:appointment, user: user)

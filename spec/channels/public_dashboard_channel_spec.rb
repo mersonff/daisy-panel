@@ -2,10 +2,9 @@ require 'rails_helper'
 
 RSpec.describe PublicDashboardChannel, type: :channel do
   before do
-    # Create some test data
     create_list(:client, 3)
     create(:client, phone: "11999999999")
-    create(:client, phone: "11999999999") # Duplicate phone
+    create(:client, phone: "11999999999")
   end
 
   describe "#subscribed" do
@@ -33,8 +32,6 @@ RSpec.describe PublicDashboardChannel, type: :channel do
 
   describe "initial stats transmission" do
     it "transmits data when subscribed" do
-      # Test that the subscription process doesn't raise errors
-      # and that the channel is properly set up
       expect { subscribe }.not_to raise_error
       expect(subscription).to be_confirmed
       expect(subscription).to have_stream_from("public_dashboard")

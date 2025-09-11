@@ -47,7 +47,6 @@ RSpec.describe CsvImportJob, type: :job do
           )
         )
 
-        # Also expects public dashboard stats broadcast for created clients (one per client)
         expect(ActionCable.server).to receive(:broadcast).with(
           "public_dashboard",
           hash_including(

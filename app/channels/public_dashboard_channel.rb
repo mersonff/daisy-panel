@@ -1,8 +1,6 @@
 class PublicDashboardChannel < ApplicationCable::Channel
   def subscribed
     stream_from "public_dashboard"
-
-    # Send initial stats when user connects
     send_initial_stats
   end
 
