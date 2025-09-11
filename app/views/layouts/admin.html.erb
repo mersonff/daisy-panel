@@ -21,6 +21,9 @@
     <%= stylesheet_link_tag :app %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
+    <% if controller_name == 'dashboard' && action_name == 'index' %>
+      <%= vite_javascript_tag 'admin-dashboard' %>
+    <% end %>
   </head>
 
   <body>

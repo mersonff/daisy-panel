@@ -50,27 +50,4 @@
   </div>
 </div>
 
-<script>
-  function updateStats() {
-    fetch('/api/stats')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('total-clients').textContent = data.total_clients || 0;
-        document.getElementById('duplicate-phones').textContent = data.duplicate_phones || 0;
-        
-        const stateTableBody = document.getElementById('clients-per-state');
-        stateTableBody.innerHTML = '';
-        
-        if (data.clients_per_state) {
-          data.clients_per_state.forEach(state => {
-            const row = `<tr><td>${state.name}</td><td>${state.count}</td></tr>`;
-            stateTableBody.innerHTML += row;
-          });
-        }
-      })
-      .catch(error => {});
-  }
-  
-  updateStats();
-  setInterval(updateStats, 5000);
-</script>
+<%= vite_javascript_tag 'public-dashboard' %>

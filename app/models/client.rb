@@ -38,6 +38,9 @@ class Client < ApplicationRecord
   before_validation :upcase_state
   before_validation :upcase_name
 
+  after_create :broadcast_stats_update
+  after_destroy :broadcast_stats_update
+
   # Método to_s para representação em string
   def to_s
     name
@@ -80,5 +83,9 @@ class Client < ApplicationRecord
     unless phone.match?(/\A\(\d{2}\)\s\d{4,5}-\d{4}\z/)
       errors.add(:phone, "deve ter formato (11) 99999-9999")
     end
+  end
+
+  def broadcast_stats_update
+    PublicDashboardBroadcaster.broadcast_stats
   end
 end
