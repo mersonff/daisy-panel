@@ -47,6 +47,13 @@ RSpec.describe CsvImportJob, type: :job do
           )
         )
 
+        expect(ActionCable.server).to receive(:broadcast).with(
+          "public_dashboard",
+          hash_including(
+            type: "stats_update"
+          )
+        ).exactly(2).times
+
         described_class.perform_now(import_report.id, csv_content)
       end
     end

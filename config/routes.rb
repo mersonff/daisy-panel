@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   # Admin panel
   namespace :admin do
     root to: "dashboard#index"
+    get "dashboard/clients_chart_data", to: "dashboard#clients_chart_data"
+    get "dashboard/appointments_data", to: "dashboard#appointments_data"
     resources :clients do
       collection do
         post :import_csv
