@@ -137,6 +137,8 @@ GEM
       railties (>= 6.1.0)
     faker (3.5.2)
       i18n (>= 1.8.11, < 2)
+    foreman (0.90.0)
+      thor (~> 1.4)
     fugit (1.11.2)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -465,6 +467,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails
   faker
+  foreman
   jbuilder
   kamal
   pagy

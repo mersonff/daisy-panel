@@ -27,6 +27,8 @@ services:
       - .:/rails
       - bundle_cache:/usr/local/bundle
       - node_modules:/rails/node_modules
+    env_file:
+      - .env
     environment:
       - RAILS_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/daisy_panel_development
@@ -35,6 +37,7 @@ services:
         condition: service_healthy
     stdin_open: true
     tty: true
+    command: ["bin/dev"]
 
   worker:
     build:

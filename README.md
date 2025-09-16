@@ -60,6 +60,65 @@ bundle exec rspec
 foreman start -f Procfile.dev
 ```
 
+## 🐳 Docker (Desenvolvimento)
+
+Para executar o projeto usando Docker:
+
+### 1. Clone o repositório
+```bash
+git clone https://github.com/mersonff/daisy-panel.git
+cd daisy-panel
+```
+
+### 2. Configure as variáveis de ambiente
+```bash
+cp .env.example .env
+```
+
+**Edite o arquivo `.env` e configure:**
+- `DATABASE_URL`: Use `postgresql://postgres:postgres@db:5432/daisy_panel_development`
+- `DEVISE_SECRET_KEY`: Gere uma chave com `docker-compose run --rm web bundle exec rails secret`
+
+### 3. Execute com Docker Compose
+```bash
+# Construir e iniciar todos os serviços
+docker-compose up --build
+
+# Executar em background
+docker-compose up -d --build
+```
+
+### 4. Configure o banco de dados (primeira execução)
+```bash
+# Criar e popular o banco
+docker-compose exec web bundle exec rails db:setup
+
+# Ou, se já existir:
+docker-compose exec web bundle exec rails db:migrate
+docker-compose exec web bundle exec rails db:seed
+```
+
+### 5. Acesse a aplicação
+- **Aplicação**: http://localhost:3000
+- **PostgreSQL**: localhost:5432
+
+### Comandos úteis do Docker
+```bash
+# Ver logs
+docker-compose logs -f
+
+# Executar comandos no container
+docker-compose exec web bundle exec rails console
+docker-compose exec web bundle exec rspec
+
+# Parar os serviços
+docker-compose down
+
+# Rebuild completo
+docker-compose down -v
+docker-compose up --build
+```
+
 ## 🧪 Testes
 
 O projeto possui **100% de cobertura de testes** com **196 testes**:

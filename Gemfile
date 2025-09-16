@@ -88,3 +88,4 @@ end
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "vite_rails", "~> 3.0"
+gem "foreman"
